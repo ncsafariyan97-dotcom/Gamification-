@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gamification | Soodeh Complex</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg:#eef3ff;
+  --purple:#7357e8;
+  --blue:#4f8df7;
+  --pink:#ef6fae;
+  --yellow:#ffc857;
+  --green:#55c98b;
+  --dark:#20233a;
+  --muted:#68708c;
+  --white:#ffffff;
+  --shadow:0 18px 45px rgba(52,55,100,.13);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%,#ffffff 0 8%,transparent 25%),
+    radial-gradient(circle at 90% 90%,#ddd8ff 0 5%,transparent 25%),
+    var(--bg);
+  color:var(--dark);
+  overflow:hidden;
+}
+
+.deck{
+  width:100vw;
+  height:100vh;
+  position:relative;
+}
+
+.slide{
+  position:absolute;
+  inset:0;
+  display:none;
+  padding:50px 7vw 80px;
+  overflow-y:auto;
+  animation:fade .35s ease;
+}
+
+.slide.active{
+  display:block;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateX(20px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* ---------- GLOBAL ---------- */
+
+h1,h2,h3{
+  font-family:'Baloo 2',sans-serif;
+}
+
+h1{
+  font-size:clamp(42px,6vw,78px);
+  line-height:.95;
+}
+
+h2{
+  font-size:clamp(34px,4vw,55px);
+  line-height:1;
+}
+
+.subtitle{
+  font-size:clamp(16px,1.8vw,24px);
+  color:var(--muted);
+  margin-top:18px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:#fff;
+  padding:8px 16px;
+  border-radius:50px;
+  box-shadow:0 8px 25px rgba(60,60,100,.1);
+  font-weight:700;
+  color:var(--purple);
+  margin-bottom:18px;
+}
+
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:24px;
+}
+
+.section-title span{
+  font-size:38px;
+}
+
+.card{
+  background:rgba(255,255,255,.92);
+  border-radius:25px;
+  padding:25px;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(255,255,255,.8);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+}
+
+.pill{
+  display:inline-block;
+  padding:7px 13px;
+  background:#f0edff;
+  color:var(--purple);
+  border-radius:30px;
+  font-size:13px;
+  font-weight:700;
+  margin:4px;
+}
+
+ul{
+  list-style:none;
+}
+
+li{
+  margin:11px 0;
+}
+
+li::before{
+  content:"✦";
+  color:var(--pink);
+  font-weight:bold;
+  margin-right:10px;
+}
+
+/* ---------- COVER ---------- */
+
+.cover{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:
+    radial-gradient(circle at 15% 20%,#ffd8ed 0 4%,transparent 14%),
+    radial-gradient(circle at 85% 25%,#d7e7ff 0 5%,transparent 15%),
+    radial-gradient(circle at 75% 80%,#ddd6ff 0 6%,transparent 18%),
+    var(--bg);
+}
+
+.cover-content{
+  max-width:1000px;
+}
+
+.game-icon{
+  font-size:90px;
+  margin-bottom:10px;
+  animation:bounce 2s infinite;
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+
+.cover h1{
+  color:var(--purple);
+}
+
+.cover .big{
+  color:var(--dark);
+}
+
+.info-row{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-top:35px;
+}
+
+.info{
+  background:#fff;
+  padding:12px 22px;
+  border-radius:50px;
+  box-shadow:var(--shadow);
+  font-weight:600;
+}
+
+/* ---------- GAME CARDS ---------- */
+
+.game-card{
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:.25s;
+  min-height:180px;
+}
+
+.game-card:hover{
+  transform:translateY(-7px) rotate(-.5deg);
+  box-shadow:0 25px 50px rgba(60,60,100,.18);
+}
+
+.game-card .number{
+  position:absolute;
+  right:18px;
+  top:13px;
+  font-size:42px;
+  font-family:'Baloo 2';
+  color:#e9e6ff;
+  font-weight:800;
+}
+
+.game-card .emoji{
+  font-size:42px;
+}
+
+.game-card h3{
+  font-size:25px;
+  margin:5px 0;
+}
+
+.game-card p{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.click{
+  margin-top:13px;
+  font-size:12px;
+  color:var(--purple);
+  font-weight:700;
+}
+
+/* ---------- MODAL ---------- */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(28,30,55,.62);
+  backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  padding:20px;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:min(760px,95vw);
+  max-height:88vh;
+  overflow:auto;
+  background:white;
+  border-radius:30px;
+  padding:34px;
+  position:relative;
+  animation:pop .25s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.85);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.close{
+  position:absolute;
+  right:20px;
+  top:15px;
+  border:0;
+  background:#f0efff;
+  color:var(--purple);
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  font-size:20px;
+  cursor:pointer;
+}
+
+.modal-box h2{
+  color:var(--purple);
+  margin-bottom:15px;
+}
+
+.modal-section{
+  margin:20px 0;
+}
+
+.modal-section h4{
+  color:var(--pink);
+  margin-bottom:8px;
+}
+
+.example{
+  background:#f5f3ff;
+  border-left:5px solid var(--purple);
+  padding:13px 17px;
+  border-radius:12px;
+  margin:8px 0;
+  font-weight:600;
+}
+
+/* ---------- GAME TOOLBOX ---------- */
+
+.toolbox{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+}
+
+.tool{
+  background:white;
+  border-radius:22px;
+  padding:22px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  transition:.2s;
+}
+
+.tool:hover{
+  transform:translateY(-5px);
+}
+
+.tool .emoji{
+  font-size:38px;
+}
+
+/* ---------- MISTAKES ---------- */
+
+.mistake{
+  display:flex;
+  gap:18px;
+  align-items:flex-start;
+  background:white;
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 8px 25px rgba(60,60,100,.08);
+  margin-bottom:13px;
+}
+
+.no{
+  color:#ed6c88;
+  font-size:24px;
+}
+
+.yes{
+  color:var(--green);
+  font-size:24px;
+}
+
+/* ---------- CHALLENGE ---------- */
+
+.challenge{
+  background:
+    linear-gradient(135deg,#7357e8,#8e72f4);
+  color:white;
+  border-radius:30px;
+  padding:35px;
+  box-shadow:var(--shadow);
+}
+
+.challenge h2{
+  color:white;
+}
+
+.challenge-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:14px;
+  margin-top:25px;
+}
+
+.challenge-item{
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:18px;
+  padding:17px;
+}
+
+.challenge-item b{
+  display:block;
+  margin-bottom:5px;
+}
+
+/* ---------- GOLDEN RULE ---------- */
+
+.golden{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  min-height:70vh;
+}
+
+.golden-box{
+  max-width:900px;
+  background:white;
+  padding:55px;
+  border-radius:35px;
+  box-shadow:var(--shadow);
+}
+
+.golden-box blockquote{
+  font-family:'Baloo 2';
+  font-size:clamp(24px,3vw,38px);
+  line-height:1.25;
+  color:var(--purple);
+  margin:25px 0;
+}
+
+.final-line{
+  font-size:22px;
+  font-weight:700;
+  margin-top:14px;
+}
+
+/* ---------- NAVIGATION ---------- */
+
+.nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  z-index:50;
+  pointer-events:none;
+}
+
+.nav button{
+  pointer-events:auto;
+  border:0;
+  cursor:pointer;
+  background:white;
+  color:var(--purple);
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  box-shadow:0 8px 22px rgba(40,40,80,.15);
+  font-size:20px;
+  font-weight:bold;
+}
+
+.nav button:hover{
+  transform:scale(1.08);
+}
+
+.progress{
+  position:fixed;
+  bottom:0;
+  left:0;
+  height:4px;
+  background:linear-gradient(90deg,var(--purple),var(--pink),var(--yellow));
+  width:0;
+  z-index:60;
+  transition:.3s;
+}
+
+.counter{
+  position:fixed;
+  top:18px;
+  right:25px;
+  background:white;
+  padding:7px 13px;
+  border-radius:30px;
+  box-shadow:0 7px 20px rgba(40,40,80,.1);
+  color:var(--muted);
+  font-size:12px;
+  z-index:50;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media(max-width:650px){
+  .slide{
+    padding:35px 20px 80px;
+  }
+
+  .game-card{
+    min-height:150px;
+  }
+
+  .modal-box{
+    padding:25px 20px;
+  }
+
+  .golden-box{
+    padding:30px 20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="deck">
+
+<!-- ========================================================= -->
+<!-- SLIDE 1 -->
+<!-- ========================================================= -->
+
+<section class="slide active cover">
+
+  <div class="cover-content">
+
+    <div class="game-icon">🎮</div>
+
+    <div class="badge">WORKSHOP • GAMIFICATION</div>
+
+    <h1>Gamification</h1>
+
+    <p class="subtitle">
+      Teach with Purpose. Teach with Energy.
+    </p>
+
+    <div class="info-row">
+      <div class="info">👩🏻‍🏫 Supervisor: Farzanrh Goodarzi</div>
+      <div class="info">📍 Soodeh Complex</div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 2 -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>🎯</span>
+    <div>
+      <h2>Teach with Purpose,<br>Teach with Energy!</h2>
+      <p class="subtitle">
+        The Essentials of an Effective & Engaging English Class
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Why Gamification?</h3>
+    <p style="margin-top:12px;color:var(--muted);line-height:1.8">
+      Games are not just for entertainment.
+      When they have a clear Learning Objective, they can increase
+      Student Engagement, Interaction, Movement and meaningful language use.
+    </p>
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 3 -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>📝</span>
+    <h2>Before the Class</h2>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3>🎯 Learning Objective</h3>
+      <p style="margin-top:10px">
+        هدف درس دقیقاً چیست؟
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>🗣️ Teacher Talk</h3>
+      <p style="margin-top:10px">
+        Teacher Talk مناسب چقدر است؟
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>🧰 Materials</h3>
+      <p style="margin-top:10px">
+        چه Materialsای لازم دارم؟
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>⚠️ Possible Problems</h3>
+      <p style="margin-top:10px">
+        چه مشکلاتی ممکن است پیش بیاید؟
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>🔄 Plan B</h3>
+      <p style="margin-top:10px">
+        اگر Activity طبق برنامه پیش نرفت، چه کار کنم؟
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 4 -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>📚</span>
+    <h2>The Core of Teaching</h2>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <span class="pill">01</span>
+      <h3>Lead-in</h3>
+      <p>شروع جذاب برای ایجاد Context و جلب توجه Students.</p>
+    </div>
+
+    <div class="card">
+      <span class="pill">02</span>
+      <h3>Presentation</h3>
+      <p>
+        Visuals + Gestures + TPR + Realia + Examples
+      </p>
+    </div>
+
+    <div class="card">
+      <span class="pill">03</span>
+      <h3>Practice</h3>
+      <p>
+        تمرین کنترل‌شده و هدایت‌شده برای تثبیت Language.
+      </p>
+    </div>
+
+    <div class="card">
+      <span class="pill">04</span>
+      <h3>Production</h3>
+      <p>
+        استفاده آزادتر Students از Language در یک Context معنادار.
+      </p>
+    </div>
+
+    <div class="card">
+      <span class="pill">05</span>
+      <h3>Checking Understanding</h3>
+      <p>
+        CCQ + Demonstration + Examples
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 5 -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>👧🏻👦🏻</span>
+    <h2>How Kids Learn</h2>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">⚡ Short & Clear Instructions</div>
+    <div class="card">🖼️ Visuals, Gestures & TPR</div>
+    <div class="card">❓ CCQ & Checking Understanding</div>
+    <div class="card">📈 Simple → Complex</div>
+    <div class="card">🔁 Repetition without boredom</div>
+    <div class="card">🗣️ Balance TTT & STT</div>
+    <div class="card">🎯 Learning Objective for every Activity</div>
+    <div class="card">🎭 Fun Activity ≠ Effective Activity</div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 6 -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>⚡</span>
+    <h2>Teacher Energy</h2>
+  </div>
+
+  <div class="card" style="text-align:center;margin-bottom:22px">
+    <h3 style="font-size:30px;color:var(--purple)">
+      Voice + Face + Body + Movement + Surprise
+    </h3>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3>🎙️ Voice & Intonation</h3>
+      <p>Volume + Intonation + Stress + Speed</p>
+    </div>
+
+    <div class="card">
+      <h3>😊 Facial Expressions</h3>
+      <p>انتقال Meaning و Emotion با چهره</p>
+    </div>
+
+    <div class="card">
+      <h3>🚶 Movement</h3>
+      <p>Teacher نباید تمام کلاس در یک نقطه بایستد.</p>
+    </div>
+
+    <div class="card">
+      <h3>✋ Gestures</h3>
+      <p>کمک به درک Meaning</p>
+    </div>
+
+    <div class="card">
+      <h3>⏩ Changing the Pace</h3>
+      <p>ریتم کلاس را تغییر دهید.</p>
+    </div>
+
+    <div class="card">
+      <h3>❤️ Real Enthusiasm</h3>
+      <p>Enthusiasm واقعی، نه صرفاً بلند صحبت کردن!</p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 7 -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>👧🏻👦🏻</span>
+    <h2>Student Engagement</h2>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;text-align:center">
+    <h3 style="font-size:25px">
+      Kids should not spend most of the lesson just watching the Teacher.
+    </h3>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">🗣️ <b>Speak</b></div>
+    <div class="card">👂 <b>Listen</b></div>
+    <div class="card">🤝 <b>Interact</b></div>
+    <div class="card">🏃 <b>Move</b></div>
+    <div class="card">🎯 <b>Participate</b></div>
+    <div class="card">💭 <b>Think</b></div>
+
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Increase Student Talking Time – STT</h3>
+    <div style="margin-top:12px">
+      <span class="pill">Pair Work</span>
+      <span class="pill">Group Work</span>
+      <span class="pill">Games & Competition</span>
+      <span class="pill">Student Choice</span>
+      <span class="pill">Interaction</span>
+      <span class="pill">Movement</span>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 8 FLASHCARD -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>🃏</span>
+    <div>
+      <h2>Flashcard Games Bank</h2>
+      <p class="subtitle">Click any game to reveal the activity.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card game-card"
+         onclick="openGame('missing')">
+      <div class="number">01</div>
+      <div class="emoji">👀</div>
+      <h3>What's Missing?</h3>
+      <p>Memory + Vocabulary</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+    <div class="card game-card"
+         onclick="openGame('fast')">
+      <div class="number">02</div>
+      <div class="emoji">⚡</div>
+      <h3>Fast Touch</h3>
+      <p>Reaction + Vocabulary</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+    <div class="card game-card"
+         onclick="openGame('slap')">
+      <div class="number">03</div>
+      <div class="emoji">👋🏻</div>
+      <h3>Flashcard Slap</h3>
+      <p>Listening + Recognition</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+    <div class="card game-card"
+         onclick="openGame('guess')">
+      <div class="number">04</div>
+      <div class="emoji">🔍</div>
+      <h3>Guess the Card</h3>
+      <p>Prediction + Speaking</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+    <div class="card game-card"
+         onclick="openGame('run')">
+      <div class="number">05</div>
+      <div class="emoji">🏃🏻‍♀️</div>
+      <h3>Run & Touch</h3>
+      <p>Movement + Vocabulary</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+    <div class="card game-card"
+         onclick="openGame('pass')">
+      <div class="number">06</div>
+      <div class="emoji">🎵</div>
+      <h3>Pass the Card</h3>
+      <p>Speaking + Fluency</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+    <div class="card game-card"
+         onclick="openGame('teacher')">
+      <div class="number">07</div>
+      <div class="emoji">🎯</div>
+      <h3>Teacher Says</h3>
+      <p>Listening + TPR</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 9 NON FLASHCARD -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>🎮</span>
+    <div>
+      <h2>Games Without Flashcards</h2>
+      <p class="subtitle">Click a game to see how it works.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card game-card"
+         onclick="openGame('dictation')">
+      <div class="number">01</div>
+      <div class="emoji">🏃🏻‍♀️</div>
+      <h3>Running Dictation</h3>
+      <p>Reading + Listening + Speaking + Writing</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+    <div class="card game-card"
+         onclick="openGame('roll')">
+      <div class="number">02</div>
+      <div class="emoji">🎲</div>
+      <h3>Roll & Say</h3>
+      <p>Vocabulary + Speaking + Fluency</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+    <div class="card game-card"
+         onclick="openGame('charades')">
+      <div class="number">03</div>
+      <div class="emoji">🎭</div>
+      <h3>Charades</h3>
+      <p>Vocabulary + TPR + Interaction</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+    <div class="card game-card"
+         onclick="openGame('command')">
+      <div class="number">04</div>
+      <div class="emoji">🏆</div>
+      <h3>Command & Pick</h3>
+      <p>Listening + TPR + Reaction</p>
+      <div class="click">CLICK TO PLAY →</div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 10 TOOLBOX -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>🎭</span>
+    <div>
+      <h2>It's Not Just Flashcards!</h2>
+      <p class="subtitle">Your Activity Toolbox 🧰</p>
+    </div>
+  </div>
+
+  <div class="toolbox">
+
+    <div class="tool">
+      <div class="emoji">🧸</div>
+      <h3>Toys & Realia</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🖼️</div>
+      <h3>Pictures & Posters</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🎵</div>
+      <h3>Songs & Chants</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🤸</div>
+      <h3>TPR</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🎭</div>
+      <h3>Role Play</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🎲</div>
+      <h3>Dice Games</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🏃</div>
+      <h3>Movement Games</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">👫</div>
+      <h3>Pair / Group Activities</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🎨</div>
+      <h3>Drawing & Craft</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🕵🏻</div>
+      <h3>Guessing Games</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🎁</div>
+      <h3>Mystery Box</h3>
+    </div>
+
+    <div class="tool">
+      <div class="emoji">🎯</div>
+      <h3>Board Games</h3>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 11 MISTAKES -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>🚨</span>
+    <h2>Common Classroom Mistakes</h2>
+  </div>
+
+  <div class="mistake">
+    <div class="no">❌</div>
+    <div>
+      <b>توضیح طولانی Teacher</b>
+      <p>→ Keep Instructions Short & Clear.</p>
+    </div>
+  </div>
+
+  <div class="mistake">
+    <div class="no">❌</div>
+    <div>
+      <b>پرسیدن مداوم: “Do you understand?”</b>
+      <p>→ Use CCQs, Demonstration & Examples.</p>
+    </div>
+  </div>
+
+  <div class="mistake">
+    <div class="no">❌</div>
+    <div>
+      <b>ترجمه‌ی همه چیز</b>
+      <p>→ Context + Visuals + Gestures + TPR</p>
+    </div>
+  </div>
+
+  <div class="mistake">
+    <div class="no">❌</div>
+    <div>
+      <b>نشستن پشت میز</b>
+      <p>→ Move, Monitor & Interact.</p>
+    </div>
+  </div>
+
+  <div class="mistake">
+    <div class="no">❌</div>
+    <div>
+      <b>Activity بدون هدف آموزشی</b>
+      <p>→ Every Activity needs a Learning Objective.</p>
+    </div>
+  </div>
+
+  <div class="mistake">
+    <div class="no">❌</div>
+    <div>
+      <b>Fun بدون Learning</b>
+      <p>→ Fun ≠ Learning</p>
+    </div>
+  </div>
+
+  <div class="mistake">
+    <div class="no">❌</div>
+    <div>
+      <b>یکنواخت بودن Voice و Energy</b>
+      <p>→ Voice + Face + Body + Movement + Surprise</p>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 12 CHALLENGE -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="challenge">
+
+    <div class="badge">🏆 CHALLENGE TIME</div>
+
+    <h2>Your Challenge 🎯</h2>
+
+    <p style="margin-top:15px;font-size:18px;line-height:1.7">
+      You have <b>5 minutes</b> to design and prepare
+      a short Kids English Activity.
+    </p>
+
+    <p style="margin-top:12px">
+      Choose a simple topic:
+    </p>
+
+    <div style="margin-top:10px">
+      <span class="pill">🐶 Animals</span>
+      <span class="pill">🍎 Food</span>
+      <span class="pill">🎨 Colors</span>
+      <span class="pill">🧸 Toys</span>
+      <span class="pill">🏃 Actions</span>
+    </div>
+
+    <div class="challenge-grid">
+
+      <div class="challenge-item">
+        <b>1️⃣ Learning Objective</b>
+        What exactly should students learn or practice?
+      </div>
+
+      <div class="challenge-item">
+        <b>2️⃣ Student Interaction</b>
+        Pair Work / Group Work / Whole-class Interaction
+      </div>
+
+      <div class="challenge-item">
+        <b>3️⃣ Movement</b>
+        How will students move, react or physically participate?
+      </div>
+
+      <div class="challenge-item">
+        <b>4️⃣ Short & Clear Instructions</b>
+        Prepare the exact instructions you would give your students.
+      </div>
+
+      <div class="challenge-item">
+        <b>5️⃣ Kids-Appropriate</b>
+        Make sure it fits the students' age and level.
+      </div>
+
+      <div class="challenge-item">
+        <b>6️⃣ Student Talking Time – STT</b>
+        Students should actively use English.
+      </div>
+
+      <div class="challenge-item">
+        <b>7️⃣ Fun + Purpose</b>
+        Fun + Interactive + Effective
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 13 TEACH IT -->
+<!-- ========================================================= -->
+
+<section class="slide">
+
+  <div class="section-title">
+    <span>🎤</span>
+    <h2>Now, Teach It!</h2>
+  </div>
+
+  <div class="card" style="text-align:center;margin-bottom:22px">
+
+    <h3 style="font-size:28px;color:var(--purple)">
+      You have 2–3 minutes.
+    </h3>
+
+    <p style="margin-top:12px;color:var(--muted)">
+      Demonstrate your Activity as if you were teaching a real Kids class.
+    </p>
+
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3>👩🏻‍🏫 One Teacher</h3>
+      <p>Teacher</p>
+    </div>
+
+    <div class="card">
+      <h3>👧🏻👦🏻 Other Teachers</h3>
+      <p>Students</p>
+    </div>
+
+    <div class="card">
+      <h3>1️⃣ Start</h3>
+      <p>Start your Activity.</p>
+    </div>
+
+    <div class="card">
+      <h3>2️⃣ Instructions</h3>
+      <p>Give your instructions.</p>
+    </div>
+
+    <div class="card">
+      <h3>3️⃣ Demonstrate</h3>
+      <p>Show students what to do.</p>
+    </div>
+
+    <div class="card">
+      <h3>4️⃣ Monitor</h3>
+      <p>Monitor & Interact.</p>
+    </div>
+
+    <div class="card">
+      <h3>5️⃣ Switch</h3>
+      <p>Let another Teacher demonstrate.</p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 14 GOLDEN RULE -->
+<!-- ========================================================= -->
+
+<section class="slide golden">
+
+  <div class="golden-box">
+
+    <div style="font-size:60px">⭐</div>
+
+    <h2>Golden Rule</h2>
+
+    <blockquote>
+      “A good lesson is not just about what we teach.
+      It’s about how we make students learn,
+      participate and enjoy.”
+    </blockquote>
+
+    <div class="final-line">🎯 Teach with Purpose.</div>
+    <div class="final-line">⚡ Teach with Energy.</div>
+    <div class="final-line">❤️ Make Learning Memorable.</div>
+
+  </div>
+
+</section>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- MODAL -->
+<!-- ========================================================= -->
+
+<div class="modal" id="gameModal">
+
+  <div class="modal-box">
+
+    <button class="close" onclick="closeGame()">×</button>
+
+    <h2 id="modalTitle"></h2>
+
+    <div id="modalContent"></div>
+
+  </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- NAV -->
+<!-- ========================================================= -->
+
+<div class="counter" id="counter">1 / 14</div>
+
+<div class="nav">
+
+  <button onclick="prevSlide()">‹</button>
+
+  <button onclick="nextSlide()">›</button>
+
+</div>
+
+<div class="progress" id="progress"></div>
+
+
+<script>
+
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+
+function showSlide(index){
+
+  if(index < 0) index = slides.length - 1;
+  if(index >= slides.length) index = 0;
+
+  slides[current].classList.remove('active');
+
+  current = index;
+
+  slides[current].classList.add('active');
+
+  document.getElementById('counter').textContent =
+    `${current + 1} / ${slides.length}`;
+
+  document.getElementById('progress').style.width =
+    `${((current + 1) / slides.length) * 100}%`;
+
+  window.scrollTo(0,0);
+}
+
+function nextSlide(){
+  showSlide(current + 1);
+}
+
+function prevSlide(){
+  showSlide(current - 1);
+}
+
+
+/* Keyboard Navigation */
+
+document.addEventListener('keydown',function(e){
+
+  if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){
+    nextSlide();
+  }
+
+  if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){
+    prevSlide();
+  }
+
+  if(e.key === 'Escape'){
+    closeGame();
+  }
+
+});
+
+
+/* Touch / Swipe */
+
+let touchStartX = 0;
+
+document.addEventListener('touchstart',e=>{
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend',e=>{
+
+  let touchEndX = e.changedTouches[0].screenX;
+
+  if(touchEndX < touchStartX - 50){
+    nextSlide();
+  }
+
+  if(touchEndX > touchStartX + 50){
+    prevSlide();
+  }
+
+});
+
+
+/* =========================================================
+   GAME DATABASE
+========================================================= */
+
+const games = {
+
+missing:{
+title:"👀 What's Missing?",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+<p>چند Flashcard روی تخته قرار دهید.</p>
+<div class="example">Teacher: “Close your eyes!”</div>
+<p>یکی از کارت‌ها را حذف کنید.</p>
+<div class="example">Teacher: “Open your eyes!”</div>
+<div class="example">Teacher: “What's missing?”</div>
+<p>Students باید کارت حذف‌شده را حدس بزنند.</p>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Memory</span>
+<span class="pill">Vocabulary</span>
+<span class="pill">Speaking</span>
+</div>
+`
+},
+
+fast:{
+title:"⚡ Fast Touch",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+<p>دو Student روبه‌روی Flashcards قرار می‌گیرند.</p>
+<div class="example">Teacher: “Touch the elephant!”</div>
+<p>هرکس سریع‌تر کارت درست را لمس کند:</p>
+<div class="example">🏆 One Point!</div>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Reaction Speed</span>
+<span class="pill">Listening</span>
+<span class="pill">Vocabulary</span>
+</div>
+`
+},
+
+slap:{
+title:"👋🏻 Flashcard Slap",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+<p>Flashcards را روی میز قرار دهید.</p>
+<div class="example">Teacher: “Apple!”</div>
+<p>Students باید سریع کارت درست را بزنند.</p>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Listening</span>
+<span class="pill">Recognition</span>
+<span class="pill">Reaction</span>
+</div>
+`
+},
+
+guess:{
+title:"🔍 Guess the Card",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+<p>Teacher Flashcard را کم‌کم نشان می‌دهد.</p>
+
+<div class="example">“Is it a cat?”</div>
+<div class="example">“Is it a dog?”</div>
+<div class="example">“Is it a lion?”</div>
+
+<p>
+هرچه Student با اطلاعات کمتری کلمه را حدس بزند،
+Activity challengingتر می‌شود.
+</p>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Prediction</span>
+<span class="pill">Speaking</span>
+<span class="pill">Vocabulary</span>
+</div>
+`
+},
+
+run:{
+title:"🏃🏻‍♀️ Run & Touch",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+<p>Flashcards را در قسمت‌های مختلف Classroom بچسبانید.</p>
+
+<div class="example">“Touch something red!”</div>
+<div class="example">“Touch the apple!”</div>
+
+<p>Students باید حرکت کنند و کارت درست را پیدا کنند.</p>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Movement</span>
+<span class="pill">Vocabulary</span>
+<span class="pill">Listening</span>
+<span class="pill">TPR</span>
+</div>
+`
+},
+
+pass:{
+title:"🎵 Pass the Card",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+<p>Music یا Rhythm پخش می‌شود.</p>
+<p>Students کارت را دست‌به‌دست می‌کنند.</p>
+
+<div class="example">Teacher: “STOP!”</div>
+
+<p>
+Studentی که کارت دستش است باید کلمه را بگوید.
+</p>
+
+<div class="example">“It's a lion.”</div>
+<div class="example">“I like lions.”</div>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Speaking</span>
+<span class="pill">Fluency</span>
+<span class="pill">Vocabulary</span>
+</div>
+`
+},
+
+teacher:{
+title:"🎯 Teacher Says",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+<p>نسخه Flashcard-based از Simon Says.</p>
+
+<div class="example">“Teacher says… touch the lion!”</div>
+<div class="example">“Teacher says… show me the pencil!”</div>
+
+<p>
+Students فقط زمانی دستور را انجام می‌دهند
+که با <b>Teacher says…</b> شروع شده باشد.
+</p>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Listening</span>
+<span class="pill">TPR</span>
+<span class="pill">Concentration</span>
+</div>
+`
+},
+
+dictation:{
+title:"🏃🏻‍♀️ Running Dictation",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+
+<p>Students را به صورت Pairs تقسیم کنید.</p>
+
+<p>
+Words، Phrases یا Short Sentences را
+در قسمت دیگری از Classroom قرار دهید.
+</p>
+
+<div class="example">
+Student A → 🏃 Run → 👀 Read → 🏃 Come back → 🗣️ Dictate
+</div>
+
+<div class="example">
+Student B → ✍️ Listen & Write
+</div>
+
+<p>سپس Roles را عوض کنید.</p>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Reading</span>
+<span class="pill">Listening</span>
+<span class="pill">Speaking</span>
+<span class="pill">Writing</span>
+<span class="pill">Teamwork</span>
+</div>
+`
+},
+
+roll:{
+title:"🎲 Roll & Say",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+
+<p>Student یک Dice می‌اندازد.</p>
+
+<div class="example">
+1 → Animal 🐶
+</div>
+<div class="example">
+2 → Food 🍕
+</div>
+<div class="example">
+3 → Color 🎨
+</div>
+<div class="example">
+4 → Toy 🧸
+</div>
+<div class="example">
+5 → Action 🏃
+</div>
+<div class="example">
+6 → Free Choice ⭐
+</div>
+
+<p>Student باید یک Word بگوید.</p>
+
+<p>در Levels بالاتر:</p>
+
+<div class="example">“I like pizza.”</div>
+<div class="example">“My favorite animal is a lion.”</div>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Vocabulary</span>
+<span class="pill">Speaking</span>
+<span class="pill">Fluency</span>
+<span class="pill">Review</span>
+</div>
+`
+},
+
+charades:{
+title:"🎭 Charades",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+
+<p>
+یک Student یک Word یا Action را
+بدون صحبت کردن اجرا می‌کند.
+</p>
+
+<p>Examples:</p>
+
+<div class="example">
+Swim • Dance • Monkey • Teacher • Happy • Tired
+</div>
+
+<p>بقیه Students باید حدس بزنند.</p>
+
+<p>برای Levels بالاتر:</p>
+
+<div class="example">“Is it a monkey?”</div>
+<div class="example">“Is it swimming?”</div>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Vocabulary</span>
+<span class="pill">Speaking</span>
+<span class="pill">TPR</span>
+<span class="pill">Interaction</span>
+</div>
+`
+},
+
+command:{
+title:"🏆 Command & Pick",
+content:`
+<div class="modal-section">
+<h4>How to Play</h4>
+
+<p>
+Students به صورت Pairs روبه‌روی هم می‌ایستند.
+</p>
+
+<p>
+بین هر دو Student یک Cup روی زمین قرار دهید.
+</p>
+
+<div class="example">“Touch your head.”</div>
+<div class="example">“Touch your nose.”</div>
+<div class="example">“Touch your ears.”</div>
+<div class="example">“Touch your shoulders.”</div>
+
+<p>
+Students باید Commands را انجام دهند.
+</p>
+
+<div class="example">🚨 Teacher: “PICK!”</div>
+
+<p>
+هر دو Student باید سریع Cup را بردارند.
+Student سریع‌تر → 🏆 One Point!
+</p>
+</div>
+
+<div class="modal-section">
+<h4>🎯 Skills</h4>
+<span class="pill">Listening</span>
+<span class="pill">TPR</span>
+<span class="pill">Concentration</span>
+<span class="pill">Reaction Speed</span>
+</div>
+`
+}
+
+};
+
+
+/* =========================================================
+   MODAL FUNCTIONS
+========================================================= */
+
+function openGame(game){
+
+  const data = games[game];
+
+  document.getElementById('modalTitle').innerHTML =
+    data.title;
+
+  document.getElementById('modalContent').innerHTML =
+    data.content;
+
+  document.getElementById('gameModal').classList.add('show');
+}
+
+function closeGame(){
+  document.getElementById('gameModal').classList.remove('show');
+}
+
+
+/* Close modal by clicking outside */
+
+document.getElementById('gameModal').addEventListener('click',function(e){
+
+  if(e.target === this){
+    closeGame();
+  }
+
+});
+
+
+/* Initial progress */
+
+showSlide(0);
+
+</script>
+
+</body>
+</html>
